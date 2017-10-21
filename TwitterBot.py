@@ -2,15 +2,13 @@ import os
 import sys
 import time
 import tweepy
-import schedule
 import sample
 import datetime
 
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-playMode = 2 # 0 preview mode, 1 post on timer, 2 post on timer, 3 post on schedule.
-scheduleTime = "10:00" #00:00 midnight, 06:00 6 o'clock, 12:00 noon, etc.
+playMode = 2 # 0 preview mode, 1 post on timer, 2 post on timer.
 timerTime = 30 # in minutes. Must be more than 5.
 model_dir = "./save"
 
@@ -44,9 +42,12 @@ def main():
 				print("Preview mode 1 activated! Please wait...")
 				time.sleep(timerTime * 1)
 				a = GenerateTweet()
-				numa = int(a.rindex('.')) + 1
-				a = str(a[0:140])
-				a = str(a[0:numa]).lower()
+				try: 
+					numa = int(a.rindex('.') + 1)
+					a = str(a[0:140])
+					a = str(a[0:numa]).lower()
+				except:
+					pass
 				print('TWEE:',a)
 				print('CHAR:',len(a))
 				print('WORD:',len(str.split(a)))
@@ -62,7 +63,7 @@ def main():
 				print("Post on timer mode activated! Please wait...")
 				time.sleep(timerTime * 1)
 				a = GenerateTweet()
-				numa = int(a.rindex('.')) + 1
+				numa = int(a.rindex('.') + 1)
 				a = str(a[0:140])
 				a = str(a[0:numa]).lower()
 				print('TWEE:',a)
@@ -77,20 +78,7 @@ def main():
 				time.sleep(timerTime * 60)
 				i+=1
 		elif playMode == 3:
-			while True:
-				print("Post on schedule mode activated! Please wait...")
-				time.sleep(timerTime * 60)
-				a = GenerateTweet()
-				print('TWEE:',a)
-				print('CHAR:',len(a))
-				print('WORD:',len(str.split(a)))
-				if len(a) <= 140:
-					print("Pushing tweet!")
-					MakeTweet(a,True,i)
-				else:
-					print("tweetstring is too long. Trying again...")
-					main()
-				i+=1
+			print("There isn't anything here. I have to come back to this section later.")
 		else:
 			print("Error! playMode must be set to either 0,1,2,3")
 	# else:
@@ -103,7 +91,7 @@ def main():
 
 def MakeTweet(tweetstring,rlyTweet,i):
 	currentTime = str(datetime.datetime.now())
-	print(str(i),"@KaleBobRoss just tweeted, '" + tweetstring + "' on " + currentTime)
+	print(str(i),"Bot tweeted, '" + tweetstring + "' on " + currentTime)
 	if rlyTweet:
 		api.update_status(tweetstring)
 	else:
