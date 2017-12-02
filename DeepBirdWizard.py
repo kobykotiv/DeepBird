@@ -35,10 +35,11 @@ def CreateNEWProfile():
 			print("Created input.txt")
 		if not os.path.isfile(dirx+'profile.ini'):
 			CreateNewINI(dirx+'profile.ini')
+			print('Created profile.ini')
+			print('You need to go to ' + str(dirx) + ' and configure the files.')
 
 	else:
 		print("That profile already exists. You need to git it a different name.")
-
 
 def GetProfileList():
 	Bar(True)
@@ -54,8 +55,6 @@ def GetProfileList():
 		CheckProfile(abc,True,True)
 	else:
 		print("You either didn't input anything, or you entered an invalid profile. Please try again.")
-# else:
-# 	CheckProfile(input_folder)
 
 def CheckTwitterPY(filename):
 	# model = str(profile_folder + filename)
@@ -65,19 +64,11 @@ def CheckTwitterPY(filename):
 		
 		config.read(filename)
 		
-		cfgTW = [config.get('TWITTER', 'CONSUMER_KEY'),config.get('TWITTER', 'CONSUMER_SECRET'),config.get('TWITTER', 'ACCESS_TOKEN'),config.get('TWITTER', 'ACCESS_TOKEN_SECRET')]
-
-		# ck  = config.get('TWITTER', 'CONSUMER_KEY')
-		# cks = config.get('TWITTER', 'CONSUMER_SECRET')
-		# at  = config.get('TWITTER', 'ACCESS_TOKEN')
-		# ats = config.get('TWITTER', 'ACCESS_TOKEN_SECRET')
-		# # print(ck)
-		# # print(cks)
-		# # print(at)
-		# # print(ats)
-
-		# auth = tweepy.OAuthHandler(ck, cks)
-		# auth.set_access_token(at, ats)
+		cfgTW = [config.get('TWITTER', 'CONSUMER_KEY'),
+		config.get('TWITTER', 'CONSUMER_SECRET'),
+		config.get('TWITTER', 'ACCESS_TOKEN'),
+		config.get('TWITTER', 'ACCESS_TOKEN_SECRET')]
+		
 		auth = tweepy.OAuthHandler(cfgTW[0], cfgTW[1])
 		auth.set_access_token(cfgTW[2], cfgTW[3])
 		return tweepy.API(auth)
@@ -85,7 +76,7 @@ def CheckTwitterPY(filename):
 		return
 
 def CreateNewINI(filename):
-	with open(filename,"w") as f:
+	with open(filename,"w",encoding='UTF-8') as f:
 		f.write("""
 [TWITTER]
 CONSUMER_KEY = xx
@@ -107,7 +98,7 @@ DECAY_RATE = 0.97
 GPU_MEM = 0.75
 
 [RNN_SAMPLE_SETTINGS]
-N = 60
+N = 40
 PRIME = 
 PICK = 1
 WIDTH = 4
@@ -123,15 +114,12 @@ NUM_OF_EVALUATIONS = 0
 
 def CheckProfile(folder,chkTwitter,qt): 
 	model = str(profile_folder + folder + "/")
-	# print("Model is " + model)
-	# if os.path.isdir(model+abcde)
 	Bar(qt)
 	if os.path.isfile(model+'input.txt'):
 		print("input.txt exists!")
 		Bar(qt)
 		if os.path.isfile(model+"words_vocab.pkl") and os.path.isfile(model+"data.npy") and os.path.isfile(model+"config.pkl") and os.path.isfile(model+"checkpoint"):
 			print("This profile is ready for evaluation!")
-			# print(model + "profile.ini")
 			Bar(qt)
 			if os.path.isfile(model+"profile.ini"):
 				if chkTwitter:
@@ -139,7 +127,6 @@ def CheckProfile(folder,chkTwitter,qt):
 						print(model+"profile.ini")
 						tpy = CheckTwitterPY(model+"profile.ini")
 						print("\nTesting Twitter.")
-						# Bar(qt)
 						name = str('@'+tpy.me().screen_name)
 						print(str("If '"+name+"' is your twitter username, congratulations!"))
 						print("Everything is set up!")
@@ -185,7 +172,6 @@ def main():
 	while choice != 'q':	
 		choice = getusrChoice().lower()
 		# Respond to the user's choice.
-		
 		if choice == 'c':
 			print("Let's Create a new profile!")
 			CreateNEWProfile()
